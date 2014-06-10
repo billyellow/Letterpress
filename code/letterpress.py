@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
 __version_info__ = (0, 0, 2)
@@ -14,6 +14,11 @@ if sys.version_info.minor < 2:
 else:
     import argparse
 
+try:
+    from urllib.parse import urlparse, urlunparse
+except ImportError:
+    from urlparse import urlparse, urlunparse
+
 import re
 import markdown2
 import logging
@@ -21,7 +26,6 @@ import logging.handlers
 import codecs
 import datetime
 import os.path
-import urllib.parse
 import shutil
 import itertools
 import pyinotify
@@ -206,8 +210,8 @@ class Tag(object):
         self.name = name
         self.posts = posts
         self.path = ('tags/' + name + '/')
-        url_comps = urllib.parse.urlparse(posts[0].permalink)
-        self.permalink = urllib.parse.urlunparse(url_comps[:2] + (self.path,) + (None,) * 3)
+        url_comps = urlparse(posts[0].permalink)
+        self.permalink = urlunparse(url_comps[:2] + (self.path,) + (None,) * 3)
 
     def build_index(self, templates_dir):
         with codecs.open(os.path.join(templates_dir, "tag_archive.html"), 'r', 'utf-8') as f:
@@ -353,8 +357,8 @@ class TimelineArchive(object):
         self.index = index
         self.posts = posts
         self.path = ('archive/' + str(index) + '/') if index > 0 else ''
-        url_comps = urllib.parse.urlparse(posts[0].permalink)
-        self.permalink = urllib.parse.urlunparse(url_comps[:2] + (self.path,) + (None,) * 3)
+        url_comps = urlparse(posts[0].permalink)
+        self.permalink = urlunparse(url_comps[:2] + (self.path,) + (None,) * 3)
 
     def build_index(self, templates_dir, prev_archive=None, next_archive=None):
         with codecs.open(os.path.join(templates_dir, "index.html"), 'r', 'utf-8') as f:
@@ -424,7 +428,10 @@ def grouper(n, iterable, fillvalue=None):
     "Collect data into fixed-length chunks or blocks"
     # grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
     args = [iter(iterable)] * n
-    return itertools.zip_longest(*args, fillvalue=fillvalue)
+    try:
+        return itertools.zip_longest(*args, fillvalue=fillvalue)
+    except AttributeError:
+        return itertools.izip_longest(*args, fillvalue=fillvalue)
 
 
 posts = {}
@@ -863,7 +870,6 @@ def main():
     notifier = pyinotify.Notifier(wm)
     wm.add_watch(published_dir, mask, proc_fun=ResourceChangeHandler(), rec=True, auto_add=True)
     notifier.loop()
-
 
 if __name__ == "__main__":
     sys.exit(main())

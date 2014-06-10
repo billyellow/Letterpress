@@ -1,3 +1,5 @@
+This version forked from [Letterpress](https://github.com/an0/Letterpress) is made for Python 2 and Python 3.
+
 # What's Letterpress?
 Letterpress is a minimal, [Markdown](http://daringfireball.net/projects/markdown/) based blogging system written in Python.
 
@@ -10,9 +12,8 @@ Letterpress is a minimal, [Markdown](http://daringfireball.net/projects/markdown
 
 # Requirements
 1. A Linux kernel with inotify support is required to run Letterpress.
-2. Python 3 is assumed. I want to contribute to the acceleration of the transition from Python 2 to Python 3. I didn't test with Python 2.
-3. [virtualenv](http://www.virtualenv.org) and [pip](http://www.pip-installer.org) are recommended.
-4. UTF-8 is assumed. The babel of human languages is bad enough, let's at least use the same encoding.
+2. [virtualenv](http://www.virtualenv.org) and [pip](http://www.pip-installer.org) are recommended.
+3. UTF-8 is assumed. The babel of human languages is bad enough, let's at least use the same encoding.
 
 # Installation
 1. Install [pyinotify](https://github.com/seb-m/pyinotify).
